@@ -20,7 +20,8 @@ class DocumentStateMachineTest {
 
     @Test
     void shouldAllowValidStatesFromDraft() {
-        assertTrue(documentStateMachine.canTransition(DocumentState.DRAFT, DocumentEvent.SUBMIT));
+        var result = documentStateMachine.getNextState(DocumentState.DRAFT, DocumentEvent.SUBMIT);
+        assertEquals(DocumentState.SUBMITTED, result);
     }
 
     @Test
@@ -30,13 +31,16 @@ class DocumentStateMachineTest {
 
         Stream.of(DocumentEvent.values())
                 .filter(state -> !validEvents.contains(state))
-                .forEach((state) -> assertFalse(documentStateMachine.canTransition(DocumentState.DRAFT, state)));
+                .forEach((state) -> {
+                    assertThrows(IllegalStateException.class, () -> documentStateMachine.getNextState(DocumentState.DRAFT, state));
+                });
 
     }
 
     @Test
     void shouldAllowValidTransitionsFromSubmitted() {
-        assertTrue(documentStateMachine.canTransition(DocumentState.SUBMITTED, DocumentEvent.ASSIGN_REVIEWER));
+        var result = documentStateMachine.getNextState(DocumentState.SUBMITTED, DocumentEvent.ASSIGN_REVIEWER);
+        assertEquals(DocumentState.UNDER_REVIEW, result);
     }
 
     @Test
@@ -46,14 +50,20 @@ class DocumentStateMachineTest {
 
         Stream.of(DocumentEvent.values())
                 .filter(state -> !validEvents.contains(state))
-                .forEach((state) -> assertFalse(documentStateMachine.canTransition(DocumentState.SUBMITTED, state)));
+                .forEach((state) -> {
+                    assertThrows(IllegalStateException.class, () -> documentStateMachine.getNextState(DocumentState.SUBMITTED, state));
+                });
     }
 
     @Test
     void shouldAllowValidTransitionsFromAssignReview() {
-        assertTrue(documentStateMachine.canTransition(DocumentState.UNDER_REVIEW, DocumentEvent.APPROVE));
-        assertTrue(documentStateMachine.canTransition(DocumentState.UNDER_REVIEW, DocumentEvent.REJECT));
-        assertTrue(documentStateMachine.canTransition(DocumentState.UNDER_REVIEW, DocumentEvent.REQUEST_CHANGES));
+        var approved = documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.APPROVE);
+        var reject = documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.REJECT);
+        var requestChanges = documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.REQUEST_CHANGES);
+
+        assertEquals(documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.APPROVE), approved);
+        assertEquals(documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.REJECT), reject);
+        assertEquals(documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.REQUEST_CHANGES), requestChanges);
     }
 
     @Test
@@ -65,12 +75,16 @@ class DocumentStateMachineTest {
 
         Stream.of(DocumentEvent.values())
                 .filter(state -> !validEvents.contains(state))
-                .forEach((state) -> assertFalse(documentStateMachine.canTransition(DocumentState.UNDER_REVIEW, state)));
+                .forEach((state) -> {
+                    assertThrows(IllegalStateException.class, () -> documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, state));
+                });
     }
 
     @Test
     void shouldAllowValidTransitionsFromApproved() {
-        assertTrue(documentStateMachine.canTransition(DocumentState.APPROVED, DocumentEvent.ARCHIVE));
+
+        var result = documentStateMachine.getNextState(DocumentState.APPROVED, DocumentEvent.ARCHIVE);
+        assertEquals(DocumentState.ARCHIVED, result);
     }
 
     @Test
@@ -80,12 +94,15 @@ class DocumentStateMachineTest {
 
         Stream.of(DocumentEvent.values())
                 .filter(state -> !validEvents.contains(state))
-                .forEach((state) -> assertFalse(documentStateMachine.canTransition(DocumentState.APPROVED, state)));
+                .forEach((state) -> {
+                    assertThrows(IllegalStateException.class, () -> documentStateMachine.getNextState(DocumentState.APPROVED, state));
+                });
     }
 
     @Test
     void shouldAllowValidTransitionsFromRejected() {
-        assertTrue(documentStateMachine.canTransition(DocumentState.APPROVED, DocumentEvent.ARCHIVE));
+        DocumentState result = documentStateMachine.getNextState(DocumentState.REJECTED, DocumentEvent.ARCHIVE);
+        assertEquals(DocumentState.ARCHIVED, result);
     }
 
     @Test
@@ -95,7 +112,9 @@ class DocumentStateMachineTest {
 
         Stream.of(DocumentEvent.values())
                 .filter(state -> !validEvents.contains(state))
-                .forEach((state) -> assertFalse(documentStateMachine.canTransition(DocumentState.REJECTED, state)));
+                .forEach((state) -> {
+                    assertThrows(IllegalStateException.class, () -> documentStateMachine.getNextState(DocumentState.REJECTED, state));
+                });
     }
 
 }

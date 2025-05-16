@@ -24,16 +24,23 @@ public class DocumentStateMachine {
         transitionsTable.put(DocumentState.UNDER_REVIEW, reviewTransitions);
 
         Map<DocumentEvent, DocumentState> approveTransitions = new HashMap<>();
-        approveTransitions.put(DocumentEvent.ARCHIVE, DocumentState.APPROVED);
+        approveTransitions.put(DocumentEvent.ARCHIVE, DocumentState.ARCHIVED);
         transitionsTable.put(DocumentState.APPROVED, approveTransitions);
 
         Map<DocumentEvent, DocumentState> rejectTransitions = new HashMap<>();
-        rejectTransitions.put(DocumentEvent.ARCHIVE, DocumentState.REJECTED);
+        rejectTransitions.put(DocumentEvent.ARCHIVE, DocumentState.ARCHIVED);
         transitionsTable.put(DocumentState.REJECTED, rejectTransitions);
     }
 
     public boolean canTransition(DocumentState from, DocumentEvent to) {
         Map<DocumentEvent, DocumentState> availableTransitions = transitionsTable.get(from);
         return availableTransitions != null && availableTransitions.containsKey(to);
+    }
+
+    public DocumentState getNextState(DocumentState documentState, DocumentEvent documentEvent) {
+        if (!this.canTransition(documentState, documentEvent)) {
+            throw new IllegalStateException("Invalid transition. State: [ " + documentState + "] " + "Event: [" + documentEvent + "]");
+        }
+        return transitionsTable.get(documentState).get(documentEvent);
     }
 }
