@@ -4,40 +4,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DocumentStateMachine {
-    Map<DocumentState, Map<DocumentEvent, DocumentState>> transitionsTable;
+    Map<DocumentState, Map<DocumentEventType, DocumentState>> transitionsTable;
 
     public DocumentStateMachine() {
         transitionsTable = new HashMap<>();
 
-        Map<DocumentEvent, DocumentState> draftsTransitions = new HashMap<>();
-        draftsTransitions.put(DocumentEvent.SUBMIT, DocumentState.SUBMITTED);
+        Map<DocumentEventType, DocumentState> draftsTransitions = new HashMap<>();
+        draftsTransitions.put(DocumentEventType.SUBMIT, DocumentState.SUBMITTED);
         transitionsTable.put(DocumentState.DRAFT, draftsTransitions);
 
-        Map<DocumentEvent, DocumentState> submittedTransitions = new HashMap<>();
-        submittedTransitions.put(DocumentEvent.ASSIGN_REVIEWER, DocumentState.UNDER_REVIEW);
+        Map<DocumentEventType, DocumentState> submittedTransitions = new HashMap<>();
+        submittedTransitions.put(DocumentEventType.ASSIGN_REVIEWER, DocumentState.UNDER_REVIEW);
         transitionsTable.put(DocumentState.SUBMITTED, submittedTransitions);
 
-        Map<DocumentEvent, DocumentState> reviewTransitions = new HashMap<>();
-        reviewTransitions.put(DocumentEvent.APPROVE, DocumentState.APPROVED);
-        reviewTransitions.put(DocumentEvent.REJECT, DocumentState.REJECTED);
-        reviewTransitions.put(DocumentEvent.REQUEST_CHANGES, DocumentState.DRAFT);
+        Map<DocumentEventType, DocumentState> reviewTransitions = new HashMap<>();
+        reviewTransitions.put(DocumentEventType.APPROVE, DocumentState.APPROVED);
+        reviewTransitions.put(DocumentEventType.REJECT, DocumentState.REJECTED);
+        reviewTransitions.put(DocumentEventType.REQUEST_CHANGES, DocumentState.DRAFT);
         transitionsTable.put(DocumentState.UNDER_REVIEW, reviewTransitions);
 
-        Map<DocumentEvent, DocumentState> approveTransitions = new HashMap<>();
-        approveTransitions.put(DocumentEvent.ARCHIVE, DocumentState.ARCHIVED);
+        Map<DocumentEventType, DocumentState> approveTransitions = new HashMap<>();
+        approveTransitions.put(DocumentEventType.ARCHIVE, DocumentState.ARCHIVED);
         transitionsTable.put(DocumentState.APPROVED, approveTransitions);
 
-        Map<DocumentEvent, DocumentState> rejectTransitions = new HashMap<>();
-        rejectTransitions.put(DocumentEvent.ARCHIVE, DocumentState.ARCHIVED);
+        Map<DocumentEventType, DocumentState> rejectTransitions = new HashMap<>();
+        rejectTransitions.put(DocumentEventType.ARCHIVE, DocumentState.ARCHIVED);
         transitionsTable.put(DocumentState.REJECTED, rejectTransitions);
     }
 
-    public boolean canTransition(DocumentState from, DocumentEvent to) {
-        Map<DocumentEvent, DocumentState> availableTransitions = transitionsTable.get(from);
+    public boolean canTransition(DocumentState from, DocumentEventType to) {
+        Map<DocumentEventType, DocumentState> availableTransitions = transitionsTable.get(from);
         return availableTransitions != null && availableTransitions.containsKey(to);
     }
 
-    public DocumentState getNextState(DocumentState documentState, DocumentEvent documentEvent) {
+    public DocumentState getNextState(DocumentState documentState, DocumentEventType documentEvent) {
         if (!this.canTransition(documentState, documentEvent)) {
             throw new IllegalStateException("Invalid transition. State: [" + documentState + "] " + "Event: [" + documentEvent + "]");
         }

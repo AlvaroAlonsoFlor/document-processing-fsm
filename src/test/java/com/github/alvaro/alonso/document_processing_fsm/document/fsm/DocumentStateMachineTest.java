@@ -20,16 +20,16 @@ class DocumentStateMachineTest {
 
     @Test
     void shouldAllowValidStatesFromDraft() {
-        var result = documentStateMachine.getNextState(DocumentState.DRAFT, DocumentEvent.SUBMIT);
+        var result = documentStateMachine.getNextState(DocumentState.DRAFT, DocumentEventType.SUBMIT);
         assertEquals(DocumentState.SUBMITTED, result);
     }
 
     @Test
     void shouldRejectInvalidTransitionEventsFromDraft() {
-        List<DocumentEvent> validEvents = new ArrayList<>();
-        validEvents.add(DocumentEvent.SUBMIT);
+        List<DocumentEventType> validEvents = new ArrayList<>();
+        validEvents.add(DocumentEventType.SUBMIT);
 
-        Stream.of(DocumentEvent.values())
+        Stream.of(DocumentEventType.values())
                 .filter(state -> !validEvents.contains(state))
                 .forEach((state) -> {
                     assertThrows(IllegalStateException.class, () -> documentStateMachine.getNextState(DocumentState.DRAFT, state));
@@ -39,16 +39,16 @@ class DocumentStateMachineTest {
 
     @Test
     void shouldAllowValidTransitionsFromSubmitted() {
-        var result = documentStateMachine.getNextState(DocumentState.SUBMITTED, DocumentEvent.ASSIGN_REVIEWER);
+        var result = documentStateMachine.getNextState(DocumentState.SUBMITTED, DocumentEventType.ASSIGN_REVIEWER);
         assertEquals(DocumentState.UNDER_REVIEW, result);
     }
 
     @Test
     void shouldRejectInvalidTransitionEventsFromSubmitted() {
-        List<DocumentEvent> validEvents = new ArrayList<>();
-        validEvents.add(DocumentEvent.ASSIGN_REVIEWER);
+        List<DocumentEventType> validEvents = new ArrayList<>();
+        validEvents.add(DocumentEventType.ASSIGN_REVIEWER);
 
-        Stream.of(DocumentEvent.values())
+        Stream.of(DocumentEventType.values())
                 .filter(state -> !validEvents.contains(state))
                 .forEach((state) -> {
                     assertThrows(IllegalStateException.class, () -> documentStateMachine.getNextState(DocumentState.SUBMITTED, state));
@@ -57,23 +57,23 @@ class DocumentStateMachineTest {
 
     @Test
     void shouldAllowValidTransitionsFromAssignReview() {
-        var approved = documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.APPROVE);
-        var reject = documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.REJECT);
-        var requestChanges = documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.REQUEST_CHANGES);
+        var approved = documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEventType.APPROVE);
+        var reject = documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEventType.REJECT);
+        var requestChanges = documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEventType.REQUEST_CHANGES);
 
-        assertEquals(documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.APPROVE), approved);
-        assertEquals(documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.REJECT), reject);
-        assertEquals(documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEvent.REQUEST_CHANGES), requestChanges);
+        assertEquals(documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEventType.APPROVE), approved);
+        assertEquals(documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEventType.REJECT), reject);
+        assertEquals(documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, DocumentEventType.REQUEST_CHANGES), requestChanges);
     }
 
     @Test
     void shouldRejectInvalidTransitionEventsFromUnderReview() {
-        List<DocumentEvent> validEvents = new ArrayList<>();
-        validEvents.add(DocumentEvent.APPROVE);
-        validEvents.add(DocumentEvent.REJECT);
-        validEvents.add(DocumentEvent.REQUEST_CHANGES);
+        List<DocumentEventType> validEvents = new ArrayList<>();
+        validEvents.add(DocumentEventType.APPROVE);
+        validEvents.add(DocumentEventType.REJECT);
+        validEvents.add(DocumentEventType.REQUEST_CHANGES);
 
-        Stream.of(DocumentEvent.values())
+        Stream.of(DocumentEventType.values())
                 .filter(state -> !validEvents.contains(state))
                 .forEach((state) -> {
                     assertThrows(IllegalStateException.class, () -> documentStateMachine.getNextState(DocumentState.UNDER_REVIEW, state));
@@ -83,16 +83,16 @@ class DocumentStateMachineTest {
     @Test
     void shouldAllowValidTransitionsFromApproved() {
 
-        var result = documentStateMachine.getNextState(DocumentState.APPROVED, DocumentEvent.ARCHIVE);
+        var result = documentStateMachine.getNextState(DocumentState.APPROVED, DocumentEventType.ARCHIVE);
         assertEquals(DocumentState.ARCHIVED, result);
     }
 
     @Test
     void shouldRejectInvalidTransitionEventsFromUnderApproved() {
-        List<DocumentEvent> validEvents = new ArrayList<>();
-        validEvents.add(DocumentEvent.ARCHIVE);
+        List<DocumentEventType> validEvents = new ArrayList<>();
+        validEvents.add(DocumentEventType.ARCHIVE);
 
-        Stream.of(DocumentEvent.values())
+        Stream.of(DocumentEventType.values())
                 .filter(state -> !validEvents.contains(state))
                 .forEach((state) -> {
                     assertThrows(IllegalStateException.class, () -> documentStateMachine.getNextState(DocumentState.APPROVED, state));
@@ -101,16 +101,16 @@ class DocumentStateMachineTest {
 
     @Test
     void shouldAllowValidTransitionsFromRejected() {
-        DocumentState result = documentStateMachine.getNextState(DocumentState.REJECTED, DocumentEvent.ARCHIVE);
+        DocumentState result = documentStateMachine.getNextState(DocumentState.REJECTED, DocumentEventType.ARCHIVE);
         assertEquals(DocumentState.ARCHIVED, result);
     }
 
     @Test
     void shouldRejectInvalidTransitionEventsFromUnderReject() {
-        List<DocumentEvent> validEvents = new ArrayList<>();
-        validEvents.add(DocumentEvent.ARCHIVE);
+        List<DocumentEventType> validEvents = new ArrayList<>();
+        validEvents.add(DocumentEventType.ARCHIVE);
 
-        Stream.of(DocumentEvent.values())
+        Stream.of(DocumentEventType.values())
                 .filter(state -> !validEvents.contains(state))
                 .forEach((state) -> {
                     assertThrows(IllegalStateException.class, () -> documentStateMachine.getNextState(DocumentState.REJECTED, state));

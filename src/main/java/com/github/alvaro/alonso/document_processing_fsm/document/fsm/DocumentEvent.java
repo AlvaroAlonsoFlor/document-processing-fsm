@@ -1,10 +1,8 @@
 package com.github.alvaro.alonso.document_processing_fsm.document.fsm;
 
-public enum DocumentEvent {
-    SUBMIT,
-    ASSIGN_REVIEWER,
-    APPROVE,
-    REJECT,
-    REQUEST_CHANGES,
-    ARCHIVE
+import com.github.alvaro.alonso.document_processing_fsm.document.Document;
+
+public interface DocumentEvent {
+    DocumentEventType getEventType();
+    void handle(Document document);
 }
