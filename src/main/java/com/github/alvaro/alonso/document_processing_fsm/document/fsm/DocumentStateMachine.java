@@ -39,7 +39,7 @@ public class DocumentStateMachine {
 
     public DocumentState getNextState(DocumentState documentState, DocumentEvent documentEvent) {
         if (!this.canTransition(documentState, documentEvent)) {
-            throw new IllegalStateException("Invalid transition. State: [ " + documentState + "] " + "Event: [" + documentEvent + "]");
+            throw new IllegalStateException("Invalid transition. State: [" + documentState + "] " + "Event: [" + documentEvent + "]");
         }
         return transitionsTable.get(documentState).get(documentEvent);
     }
