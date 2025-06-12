@@ -13,6 +13,5 @@ public class SubmitEvent implements DocumentEvent {
     @Override
     public void handle(Document document) {
         System.out.println("Sending out notification of submission");
-        System.out.println("Maybe setting out some ");
     }
 }

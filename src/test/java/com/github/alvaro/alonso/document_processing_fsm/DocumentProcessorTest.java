@@ -1,6 +1,7 @@
 package com.github.alvaro.alonso.document_processing_fsm;
 
 import com.github.alvaro.alonso.document_processing_fsm.document.Document;
+import com.github.alvaro.alonso.document_processing_fsm.document.DocumentEventException;
 import com.github.alvaro.alonso.document_processing_fsm.document.DocumentProcessor;
 import com.github.alvaro.alonso.document_processing_fsm.document.fsm.DocumentState;
 import com.github.alvaro.alonso.document_processing_fsm.document.review.AssignReviewerEvent;
@@ -21,7 +22,7 @@ public class DocumentProcessorTest {
     }
 
     @Test
-    void shouldProcessEventSuccessfully() {
+    void shouldProcessEventSuccessfully() throws DocumentEventException {
         Document document = new Document("test", "title", "some content", "Test McTest", DocumentState.DRAFT, null);
         var result = documentProcessor.processEvent(document, new SubmitEvent(), "Test McTest");
         assertTrue(result);

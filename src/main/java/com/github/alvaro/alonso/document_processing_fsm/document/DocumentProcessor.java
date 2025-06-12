@@ -13,7 +13,7 @@ public class DocumentProcessor {
         this.stateMachine = new DocumentStateMachine();
     }
 
-    public boolean processEvent(Document document, DocumentEvent event, String performer) {
+    public boolean processEvent(Document document, DocumentEvent event, String performer) throws DocumentEventException {
         DocumentState currentState = document.state();
         DocumentState newState = stateMachine.getNextState(currentState, event.getEventType());
 
