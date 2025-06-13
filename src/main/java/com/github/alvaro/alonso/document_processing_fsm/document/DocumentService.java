@@ -3,7 +3,9 @@ package com.github.alvaro.alonso.document_processing_fsm.document;
 import com.github.alvaro.alonso.document_processing_fsm.document.fsm.DocumentEventType;
 import com.github.alvaro.alonso.document_processing_fsm.document.fsm.DocumentState;
 import com.github.alvaro.alonso.document_processing_fsm.document.fsm.DocumentStateMachine;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DocumentService {
     private final DocumentStateMachine stateMachine;
 
