@@ -1,3 +1,6 @@
 spring:
   application:
     name: document-processing-fsm
+  webflux:
+    problemdetails:
+      enabled: true
