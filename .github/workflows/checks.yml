@@ -1,8 +1,6 @@
 name: Checks
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -18,23 +16,13 @@ jobs:
 
       - name: Formatting checks
         run: ./gradlew spotlessCheck
-  assemble:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Java and Gradle
-        uses: ./.github/actions/setup-java-gradle
-      - name: Assemble
-        run: ./gradlew assemble
 
   unit-test:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    needs: assemble
     steps:
+      - uses: actions/checkout@v4
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Run unit tests
