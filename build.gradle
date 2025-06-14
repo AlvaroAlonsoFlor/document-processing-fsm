@@ -31,6 +31,25 @@ test {
 	finalizedBy jacocoTestReport
 }
 
+spotless {
+
+	format 'misc', {
+		target '*.gradle', '.gitattributes', '.gitignore'
+
+		trimTrailingWhitespace()
+		leadingSpacesToTabs()
+		endWithNewline()
+	}
+	java {
+
+		googleJavaFormat('1.27.0').aosp().reflowLongStrings().skipJavadocFormatting()
+		importOrder()
+		removeUnusedImports()
+		formatAnnotations()
+
+	}
+}
+
 jacocoTestReport {
 	dependsOn test
 	reports {
@@ -49,4 +68,3 @@ jacocoTestCoverageVerification {
 		}
 	}
 }
-
