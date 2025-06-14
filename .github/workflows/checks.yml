@@ -7,18 +7,33 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  format:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-
     steps:
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
 
       - name: Formatting checks
         run: ./gradlew spotlessCheck
-
-      - name: Build and test
+  assemble:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Assemble
         run: ./gradlew assemble
+
+    unit-test:
+      runs-on: ubuntu-latest
+      permissions:
+        contents: read
+      needs: assemble
+      steps:
+        - name: Setup Java and Gradle
+          uses: ./.github/actions/setup-java-gradle
+        - name: Run unit tests
+          run: ./gradlew test
