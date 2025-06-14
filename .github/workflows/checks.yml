@@ -27,13 +27,13 @@ jobs:
       - name: Assemble
         run: ./gradlew assemble
 
-    unit-test:
-      runs-on: ubuntu-latest
-      permissions:
-        contents: read
-      needs: assemble
-      steps:
-        - name: Setup Java and Gradle
-          uses: ./.github/actions/setup-java-gradle
-        - name: Run unit tests
-          run: ./gradlew test
+  unit-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs: assemble
+    steps:
+      - name: Setup Java and Gradle
+        uses: ./.github/actions/setup-java-gradle
+      - name: Run unit tests
+        run: ./gradlew test
