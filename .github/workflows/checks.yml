@@ -12,6 +12,7 @@ jobs:
     permissions:
       contents: read
     steps:
+      - uses: actions/checkout@v4
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
 
@@ -22,6 +23,7 @@ jobs:
     permissions:
       contents: read
     steps:
+      - uses: actions/checkout@v4
       - name: Setup Java and Gradle
         uses: ./.github/actions/setup-java-gradle
       - name: Assemble
