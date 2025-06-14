@@ -37,9 +37,16 @@ public class DocumentStateMachine {
         return availableTransitions != null && availableTransitions.containsKey(to);
     }
 
-    public DocumentState getNextState(DocumentState documentState, DocumentEventType documentEvent) {
+    public DocumentState getNextState(
+            DocumentState documentState, DocumentEventType documentEvent) {
         if (!this.canTransition(documentState, documentEvent)) {
-            throw new IllegalStateException("Invalid transition. State: [" + documentState + "] " + "Event: [" + documentEvent + "]");
+            throw new IllegalStateException(
+                    "Invalid transition. State: ["
+                            + documentState
+                            + "] "
+                            + "Event: ["
+                            + documentEvent
+                            + "]");
         }
         return transitionsTable.get(documentState).get(documentEvent);
     }

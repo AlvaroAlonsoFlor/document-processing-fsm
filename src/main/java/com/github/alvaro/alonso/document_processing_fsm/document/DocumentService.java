@@ -7,7 +7,6 @@ import com.github.alvaro.alonso.document_processing_fsm.document.fsm.DocumentSta
 public class DocumentService {
     private final DocumentStateMachine stateMachine;
 
-
     public DocumentService() {
         stateMachine = new DocumentStateMachine();
     }
@@ -21,6 +20,5 @@ public class DocumentService {
         // maybe send notification
         // use audit service to audit action
         return document.withState(newState);
-
     }
 }
