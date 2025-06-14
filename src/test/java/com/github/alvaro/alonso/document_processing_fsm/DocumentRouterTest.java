@@ -1,5 +1,7 @@
 package com.github.alvaro.alonso.document_processing_fsm;
 
+import static org.mockito.Mockito.when;
+
 import com.github.alvaro.alonso.document_processing_fsm.document.Document;
 import com.github.alvaro.alonso.document_processing_fsm.document.DocumentHandler;
 import com.github.alvaro.alonso.document_processing_fsm.document.DocumentRouter;
@@ -16,25 +18,23 @@ import org.springframework.http.ProblemDetail;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-import static org.mockito.Mockito.when;
-
 @WebFluxTest
 @Import({DocumentRouter.class, DocumentHandler.class, GlobalErrorHandler.class})
 @AutoConfigureWebTestClient
 public class DocumentRouterTest {
 
-    @Autowired
-    private WebTestClient webTestClient;
+    @Autowired private WebTestClient webTestClient;
 
-    @MockitoBean
-    private DocumentService service;
+    @MockitoBean private DocumentService service;
 
     static final String API_URL = "/api/v1/document";
     static final String SUBMIT_URL = API_URL + "/submit";
 
     @Test
     void submitDocument() {
-        var document = new Document(null, "test-doc", "lorem ipsum", "some-id", DocumentState.SUBMITTED, null);
+        var document =
+                new Document(
+                        null, "test-doc", "lorem ipsum", "some-id", DocumentState.SUBMITTED, null);
 
         when(service.submitDraft(document)).thenReturn(document);
 
@@ -65,7 +65,10 @@ public class DocumentRouterTest {
                 .expectStatus()
                 .isBadRequest()
                 .expectBody(ProblemDetail.class)
-                .isEqualTo(ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Document author not provided, Document content not provided, Document state not provided, Document title not provided"));
+                .isEqualTo(
+                        ProblemDetail.forStatusAndDetail(
+                                HttpStatus.BAD_REQUEST,
+                                "Document author not provided, Document content not provided,"
+                                    + " Document state not provided, Document title not provided"));
     }
-
 }
